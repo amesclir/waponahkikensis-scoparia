@@ -1,0 +1,69 @@
+---
+title: "waponahkikensis-scoparia"
+author: "Marcial"
+date: "05/20/2017"
+output: html_document
+---
+
+```{r}
+library(poppr)
+mydata <- read.genalex ("CarexWapoScoring3.csv")
+mydata
+
+mydata2 <- missingno(mydata, type = "genotype", cutoff = 0.60, quiet = FALSE, freq = FALSE)
+
+mydata3 <- missingno(mydata, type = "genotype", cutoff = 0, quiet = FALSE, freq = FALSE)
+
+mytree <- aboot(mydata3, tree = "nj", distance = "nei.dist", sample = 1000, 
+                cutoff = 50, showtree = TRUE, missing = "mean", mcutoff = 0, 
+                quiet = FALSE, root = NULL)
+
+mytree <- root(mytree, "T1_1")
+
+
+plot(mytree, type = "phylogram", use.edge.length = TRUE,
+     node.pos = NULL, show.tip.label = TRUE, show.node.label = T,
+     edge.color = "black", edge.width = 1, edge.lty = 1, font = 0.3,
+     cex = 0.4, adj = NULL, srt = 0, no.margin = FALSE,
+     root.edge = FALSE, label.offset = 0, underscore = FALSE,
+     x.lim = NULL, y.lim = NULL, direction = "rightwards",
+     lab4ut = "horizontal", tip.color = "black")
+
+
+mytree2 <- bruvo.boot(mydata3, replen = c(6, 3, 3, 2, 3, 3, 3, 9, 4, 3) , add = TRUE, loss = TRUE, sample = 1000, 
+           tree = "nj", showtree = TRUE, cutoff = NULL, quiet = FALSE,
+           root = NULL)
+
+mytree2 <- root(mytree2, "T1_1")
+mytree2$node.label[mytree2$node.label<50] <- NA
+
+plot(mytree2, type = "phylogram", use.edge.length = TRUE,
+     node.pos = NULL, show.tip.label = TRUE, show.node.label = TRUE,
+     edge.color = "black", edge.width = 1, edge.lty = 1, font = 0.3,
+     cex = 0.4, adj = NULL, srt = 0, no.margin = FALSE,
+     root.edge = FALSE, label.offset = 0, underscore = FALSE,
+     x.lim = NULL, y.lim = NULL, direction = "rightwards",
+     lab4ut = "horizontal", tip.color = "black")
+
+bruvo.msn.mydata <- bruvo.msn(mydata3, replen = c(6, 3, 3, 2, 3, 3, 3, 9, 4, 3), add = TRUE, loss = TRUE,
+          mlg.compute = "original", palette = topo.colors, sublist = "All",
+          blacklist = NULL, vertex.label = "inds", gscale = TRUE, 
+          glim = c(0,0.8), gadj = 1, gweight = 1, wscale = TRUE, showplot = TRUE,
+          include.ties = FALSE, threshold = 0,
+          clustering.algorithm = "farthest_neighbor")
+
+plot_poppr_msn(mydata3, bruvo.msn.mydata, gscale = TRUE, gadj = 3,
+               mlg.compute = "original", glim = c(0, 0.8), gweight = 1,
+               wscale = TRUE, nodebase = 1.15, nodelab = 2, inds = "",
+               mlg = FALSE, quantiles = TRUE, cutoff = NULL, palette = NULL, beforecut = FALSE, pop.leg = TRUE,
+               scale.leg = TRUE)
+
+plot_poppr_msn(mydata3, bruvo.msn.mydata, gscale = TRUE, gadj = 3,
+               mlg.compute = "original", glim = c(0, 0.8), gweight = 1,
+               wscale = TRUE, nodebase = 1.15, nodelab = 2, inds = row.names(mydata3$tab)[grep("^S", row.names(mydata3$tab))],
+               mlg = FALSE, quantiles = TRUE, cutoff = NULL, palette = NULL, beforecut = FALSE, pop.leg = TRUE,
+               scale.leg = TRUE)
+
+
+```
+

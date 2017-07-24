@@ -65,5 +65,10 @@ plot_poppr_msn(mydata3, bruvo.msn.mydata, gscale = TRUE, gadj = 3,
                scale.leg = TRUE)
 
 
+private_alleles(mydata3, form = alleles ~ ., report = "table",
+level = "population", count.alleles = TRUE, drop = FALSE)
+
+poppr(mydata3)
+locus_table(mydata3)
 ```
 
